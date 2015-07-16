@@ -3,35 +3,22 @@
 MidiWindow::MidiWindow(QWidget *parent) : QWidget(parent)
 {
 
-        // Create the overall layout
+        // Create the layout container
         mwLayout = new QVBoxLayout;
 
-        // the Midi status group
         createStatusGroup();
-
-        // Midi entities group
         createEntitiesGroup();
-
-        // Midi Event Log
         createEventsGroup();
-
-        // App console group
+        // App console group - this may become a seperate window
         createAppGroup();
-
         // set up the window
         setLayout(mwLayout);
         setWindowTitle(tr("Midi Window"));
 }
 
-int MidiWindow::checkState() const
-{
-}
-
-
 void MidiWindow::createStatusGroup()
 {
     // Midi status group
-    // these groups should be pitched out to other methods
     statusLabel = new QGroupBox(tr("MIDI Status"));
     status = new QLabel(tr("Idle"));
     connectButton = new QPushButton("&Connect");
@@ -39,16 +26,12 @@ void MidiWindow::createStatusGroup()
     startButton = new QPushButton("S&tart");
     startButton->setEnabled(false);
     connect(startButton, SIGNAL(clicked()), this, SLOT(startMidi()));
-    // flushButton = new QPushButton("&Flush");
-    // flushButton->setEnabled(false);
-    // connect(flushButton, SIGNAL(clicked()), this, SLOT(flushMidi()));
 
+    // layout
     midiStatusLayout = new QHBoxLayout;
-
     midiStatusLayout->addWidget(status);
     midiStatusLayout->addWidget(connectButton);
     midiStatusLayout->addWidget(startButton);
-    //midiStatusLayout->addWidget(flushButton);
     statusLabel->setLayout(midiStatusLayout);
     mwLayout->addWidget(statusLabel);
 }
@@ -61,11 +44,10 @@ void MidiWindow::createEntitiesGroup()
     sourceDropdown = new QComboBox();
     destDropdown = new QComboBox();
 
-    // this must be done first
+    // Layout
     midiEntityLayout = new QGridLayout();
     midiEntitiesLabel->setLayout(midiEntityLayout);
     mwLayout->addWidget(midiEntitiesLabel);
-
     midiEntityLayout->addWidget(sourcesLabel, 2, 0);
     midiEntityLayout->addWidget(destLabel, 4, 0);
     midiEntityLayout->addWidget(sourceDropdown, 2, 2);
@@ -76,9 +58,9 @@ void MidiWindow::createEventsGroup()
 {
     midiEventLabel = new QGroupBox(tr("MIDI Event Log"));
     eventTable = new QTableView();
-    // < do some table setup here >
     eventScroll = new QScrollArea();
     eventScroll->setWidget(eventTable);
+
     midiEventLayout = new QVBoxLayout();
     midiEventLayout->addWidget(eventScroll);
     midiEventLabel->setLayout(midiEventLayout);
@@ -129,62 +111,16 @@ void MidiWindow::connectClient()
       error.printMessage();
     }
 
-    // get port counts, clear data
-    unsigned int numInPorts = rtm_in->getPortCount();
-    unsigned int numOutPorts = rtm_out->getPortCount();
-    std::string portName;
-    sourceNames.clear();
-    destNames.clear();
+    // get all the names for the available ports
+    getEntityList();
 
-    // retrieve all names
-    if(numInPorts>0)
-    {
-      for ( unsigned int i=0; i<numInPorts; i++ )
-      {
-          try {
-            portName = rtm_in->getPortName(i);
-            sourceNames<<QString::fromStdString(portName);
-          }
-          catch ( RtMidiError &error ) {
-            error.printMessage();
-            std::cout<<"Error getting input ports."<<std::endl;
-          }
-          std::cout << "Input Port #" << i+1 << ": " << portName << '\n';
-       }
+    // enable start button
+    startButton->setEnabled(true);
 
-    }else {
-        std::cout<<"No input ports available."<<std::endl;
-    }
-     if(numOutPorts>0)
-    {
-         for ( unsigned int i=0; i<numOutPorts; i++ )
-         {
-             try {
-               portName = rtm_out->getPortName(i);
-               destNames<<QString::fromStdString(portName);
-             }
-             catch ( RtMidiError &error ) {
-               error.printMessage();
-               std::cout<<"Error getting output ports."<<std::endl;
-             }
-             std::cout << "Output Port #" << i+1 << ": " << portName << '\n';
-          }
-
-    }else {
-         std::cout<<"No output ports available."<<std::endl;
-    }
-
-     // populate dropdowns
-     sourceDropdown->addItems(sourceNames);
-     destDropdown->addItems(destNames);
-
-     // enable start button
-     startButton->setEnabled(true);
-
-     // change connect to disconnect
-     connectButton->setText("Disconnect");
-     disconnect(connectButton, 0, 0, 0);
-     connect(connectButton, SIGNAL(clicked()), this, SLOT(disconnectClient()));
+    // change connect to disconnect
+    connectButton->setText("Disconnect");
+    disconnect(connectButton, 0, 0, 0);
+    connect(connectButton, SIGNAL(clicked()), this, SLOT(disconnectClient()));
 
 }
 
@@ -208,9 +144,8 @@ void MidiWindow::disconnectClient()
     disconnect(connectButton, 0,0,0);
     connect(connectButton, SIGNAL(clicked()), this, SLOT(connectClient()));
 
-    // fix start and flush buttons
+    // fix start button
     startButton->setEnabled(false);
-    // flushButton->setEnabled(false);
 
     // delete dropdown items
     sourceDropdown->clear();
@@ -228,7 +163,7 @@ void MidiWindow::startMidi()
     if(rtm_out && !rtm_out->isPortOpen()) {rtm_out->openPort(0, std::string("Simple Synth Out"));}
 
     // register callback
-    rtm_in->setCallback(&mycallback);
+    rtm_in->setCallback(&debugCallback);
 
     // set start to stop, connect the signal
     startButton->setText("Stop");
@@ -238,13 +173,65 @@ void MidiWindow::startMidi()
     // disable the disconnect button - no disconnecting while running
     connectButton->setEnabled(false);
 
-    // enable flushing
-    // flushButton->setEnabled(true);
 }
 
 void MidiWindow::getEntityList()
 {
+    // get port counts, clear data
+    unsigned int numInPorts = rtm_in->getPortCount();
+    unsigned int numOutPorts = rtm_out->getPortCount();
+    std::string portName;
 
+    // clear the name lists
+    sourceNames.clear();
+    destNames.clear();
+
+    // retrieve all names - input
+    if(numInPorts>0)
+    {
+      for ( unsigned int i=0; i<numInPorts; i++ )
+      {
+          try {
+            portName = rtm_in->getPortName(i);
+            sourceNames<<QString::fromStdString(portName);
+          }
+          catch ( RtMidiError &error ) {
+            error.printMessage();
+            std::cout<<"Error getting input ports."<<std::endl;
+          }
+          std::cout << "Input Port #" << i+1 << ": " << portName << '\n';
+       }
+
+    }else {
+        std::cout<<"No input ports available."<<std::endl;
+    }
+
+
+
+    if(numOutPorts>0)
+    {
+         for ( unsigned int i=0; i<numOutPorts; i++ )
+         {
+             try {
+               portName = rtm_out->getPortName(i);
+               destNames<<QString::fromStdString(portName);
+             }
+             catch ( RtMidiError &error ) {
+               error.printMessage();
+               std::cout<<"Error getting output ports."<<std::endl;
+             }
+             std::cout << "Output Port #" << i+1 << ": " << portName << '\n';
+          }
+
+    }else {
+         std::cout<<"No output ports available."<<std::endl;
+    }
+
+     // populate dropdowns
+     sourceDropdown->addItems(sourceNames);
+     destDropdown->addItems(destNames);
+
+     // hookup user selection signals
 }
 
 void MidiWindow::stopMidi()
@@ -265,11 +252,6 @@ void MidiWindow::stopMidi()
     connectButton->setEnabled(true);
 }
 
-void MidiWindow::flushMidi()
-{
-
-}
-
 void MidiWindow::selectSource()
 {
 
@@ -280,17 +262,10 @@ void MidiWindow::selectDestination()
 
 }
 
-void MidiWindow::selectDevice()
-{
-
-}
-
-void MidiWindow::displayComponents(){};
-void MidiWindow::clearComponents(){};
-
-void mycallback(double deltatime, std::vector<unsigned char> *message, void *userData)
+void debugCallback(double deltatime, std::vector<unsigned char> *message, void *userData)
 {
   unsigned int nBytes = message->size();
+
   for ( unsigned int i=0; i<nBytes; i++ )
   {
     std::cout << "Byte " << i << " = " << (int)message->at(i) << ", ";

@@ -12,13 +12,7 @@ class MidiWindow : public QWidget
 public:
     explicit MidiWindow(QWidget *parent = 0);
 
-    // these states can be checked thru checkState()
-    enum{ mw_start, mw_config, mw_running};
-    enum{ mw_src, mw_dest, mh_device};
-
-    // check mh state
-    int checkState() const;
-    friend void mycallback(double deltatime, std::vector< unsigned char > *message, void *userData);
+//    friend void debugCallback(double deltatime, std::vector< unsigned char > *message, void *userData);
 
 signals:
 
@@ -31,16 +25,10 @@ private slots:
     void disconnectClient();
     void startMidi();
     void stopMidi();
-    void flushMidi();
-
-    // internal methods
-    void displayComponents();
-    void clearComponents();
 
     // for entities
     void selectSource();
     void selectDestination();
-    void selectDevice();
     void getEntityList();
 
 private:
@@ -53,7 +41,8 @@ private:
     QLabel* status;
     QPushButton* connectButton;
     QPushButton* startButton;
-    QPushButton* flushButton;
+    // RtMidi has no flush. Will we have to implement ourselves?
+    // QPushButton* flushButton;
     QHBoxLayout* midiStatusLayout;
 
     // Midi Entities group
@@ -92,7 +81,7 @@ private:
 
 };
 
-void mycallback(double deltatime, std::vector< unsigned char > *message, void *userData);
+void debugCallback(double deltatime, std::vector< unsigned char > *message, void *userData);
 
 
 #endif // MIDIWINDOW_H
