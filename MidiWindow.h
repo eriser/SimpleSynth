@@ -12,8 +12,6 @@ class MidiWindow : public QWidget
 public:
     explicit MidiWindow(QWidget *parent = 0);
 
-//    friend void debugCallback(double deltatime, std::vector< unsigned char > *message, void *userData);
-
 signals:
 
 public slots:
@@ -72,7 +70,7 @@ private:
     QStringList destNames;
     QStringList deviceNames;
 
-    // creation functions
+    // GUI creation functions
 
     void createStatusGroup();
     void createEntitiesGroup();

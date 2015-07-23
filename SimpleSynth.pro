@@ -19,9 +19,15 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-    RtMidi.cpp\
-    MidiWindow.cpp
+    RtMidi.cpp \
+    RtAudio.cpp \
+    MidiWindow.cpp \
+    AudioSetupWindow.cpp \
+    RtAudio.cpp
 
 HEADERS  += RtMidi.h \
+    RtAudio.h \
     MidiHandler.h \
-    MidiWindow.h
+    MidiWindow.h \
+    AudioSetupWindow.h \
+    RtAudio.h

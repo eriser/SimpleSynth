@@ -206,8 +206,6 @@ void MidiWindow::getEntityList()
         std::cout<<"No input ports available."<<std::endl;
     }
 
-
-
     if(numOutPorts>0)
     {
          for ( unsigned int i=0; i<numOutPorts; i++ )
