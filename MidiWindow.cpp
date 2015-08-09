@@ -57,7 +57,17 @@ void MidiWindow::createEntitiesGroup()
 void MidiWindow::createEventsGroup()
 {
     midiEventLabel = new QGroupBox(tr("MIDI Event Log"));
+
+    midiGridModel = new QStandardItemModel(4,1,this);
+    midiGridModel->setHorizontalHeaderItem(0, new QStandardItem(QString("Byte 0")));
+    midiGridModel->setHorizontalHeaderItem(1, new QStandardItem(QString("Byte 1")));
+    midiGridModel->setHorizontalHeaderLabels(2, new QStandardItem(QString("Byte 2")));
+    midiGridModel->setHorizontalHeaderLabels(3, new QStandardItem(QString("Timestamp")));
+
     eventTable = new QTableView();
+    eventTable->setGridStyle(Qt::PenStyle::SolidLine);
+    eventTable->setShowGrid(true);
+
     eventScroll = new QScrollArea();
     eventScroll->setWidget(eventTable);
 

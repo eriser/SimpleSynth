@@ -12,7 +12,7 @@ AudioSetupWindow::AudioSetupWindow(QWidget *parent) : QWidget(parent)
     chanDropdown = new QComboBox();
     bufferLabel = new QLabel(tr("Buffer Size: "));
     bufferDropdown = new QComboBox();
-    srLabel = QLabel(tr("Sample Rate: "));
+    srLabel = new QLabel(tr("Sample Rate: "));
     srDropdown = new QComboBox();
     bitsLabel = new QLabel(tr("Bit Depth: "));
     bitsDropdown = new QComboBox();
@@ -30,7 +30,7 @@ AudioSetupWindow::AudioSetupWindow(QWidget *parent) : QWidget(parent)
     configLayout->addWidget(bitsLabel, 10, 0);
     configLayout->addWidget(bitsDropdown, 10, 2);
 
-    aswLayout->addWidget(configLayout);
+    aswLayout->addWidget(audioConfigGroupLabel);
 
     // button group
     resetAudioSetupButton = new QPushButton("R&eset");
@@ -40,12 +40,48 @@ AudioSetupWindow::AudioSetupWindow(QWidget *parent) : QWidget(parent)
     applyAudioSetupButton = new QPushButton("A&pply");
     connect(applyAudioSetupButton, SIGNAL(clicked()), this, SLOT(applyAudioSetup()));
 
-    aswButtonsLayout = new QHBoxLayout;
+    aswButtonsLayout = new QHBoxLayout();
+    aswButtonsLayout->setSpacing(10.0);
     aswButtonsLayout->addWidget(resetAudioSetupButton);
     aswButtonsLayout->addWidget(cancelAudioSetupButton);
     aswButtonsLayout->addWidget(applyAudioSetupButton);
 
-    aswLayout->addWidget(aswButtonsLayout);
+    aswLayout->addItem(aswButtonsLayout);
+    setLayout(aswLayout);
+    setWindowTitle(tr("Audio Setup"));
 
 }
+
+// init
+
+void AudioSetupWindow::audioInit()
+{
+
+}
+
+// for buttons
+void AudioSetupWindow::resetAudioSetup()
+{}
+
+void AudioSetupWindow::cancelAudioSetup()
+{}
+
+void AudioSetupWindow::applyAudioSetup()
+{}
+
+// parameter changes
+void AudioSetupWindow::changeDevice(int devNum)
+{}
+
+void AudioSetupWindow::changeNumChans(int numChan)
+{}
+
+void AudioSetupWindow::changeBufSize(int bufSize)
+{}
+
+void AudioSetupWindow::changeSampRate(int sampRate)
+{}
+
+void AudioSetupWindow::changeBitDepth(int bitDepth)
+{}
 

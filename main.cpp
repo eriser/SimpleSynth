@@ -2,11 +2,19 @@
 #include "AudioSetupWindow.h"
 #include <QApplication>
 
+
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    // MidiWindow w;
-    AudioSetupWindow w;
+
+    // identification
+    QCoreApplication::setOrganizationName("GarryKling");
+    QCoreApplication::setOrganizationDomain("garrykling.com");
+    QCoreApplication::setApplicationName("SimpleSynth");
+
+    MidiWindow w;
+    // AudioSetupWindow w;
 
     w.show();
 

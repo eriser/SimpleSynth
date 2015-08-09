@@ -22,12 +22,10 @@ SOURCES += main.cpp\
     RtMidi.cpp \
     RtAudio.cpp \
     MidiWindow.cpp \
-    AudioSetupWindow.cpp \
-    RtAudio.cpp
+    AudioSetupWindow.cpp
 
 HEADERS  += RtMidi.h \
     RtAudio.h \
-    MidiHandler.h \
     MidiWindow.h \
     AudioSetupWindow.h \
     RtAudio.h

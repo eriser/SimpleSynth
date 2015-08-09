@@ -3,7 +3,11 @@
 
 #include <QWidget>
 #include <QtWidgets>
+
+#ifndef __MACOSX_CORE__
 #define __MACOSX_CORE__
+#endif
+
 #include "RtMidi.h"
 
 class MidiWindow : public QWidget
@@ -11,6 +15,7 @@ class MidiWindow : public QWidget
     Q_OBJECT
 public:
     explicit MidiWindow(QWidget *parent = 0);
+    static void printMidiMessage();
 
 signals:
 
@@ -39,7 +44,7 @@ private:
     QLabel* status;
     QPushButton* connectButton;
     QPushButton* startButton;
-    // RtMidi has no flush. Will we have to implement ourselves?
+    // RtMidi has no flush. Will we decide to implement ourselves?
     // QPushButton* flushButton;
     QHBoxLayout* midiStatusLayout;
 
