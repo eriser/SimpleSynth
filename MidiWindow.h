@@ -59,6 +59,7 @@ private:
     QGridLayout* midiEntityLayout;
 
     // Midi Event log group
+    QStandardItemModel* midiGridModel;
     QGroupBox* midiEventLabel;
     QScrollArea* eventScroll;
     QTableView* eventTable;
