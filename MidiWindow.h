@@ -4,9 +4,10 @@
 #include <QWidget>
 #include <QtWidgets>
 
-#ifndef __MACOSX_CORE__
-#define __MACOSX_CORE__
-#endif
+// This should be taken care of during the buid given how RtMidi works
+// #ifndef __MACOSX_CORE__
+// #define __MACOSX_CORE__
+// #endif
 
 #include "RtMidi.h"
 

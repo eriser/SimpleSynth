@@ -61,8 +61,8 @@ void MidiWindow::createEventsGroup()
     midiGridModel = new QStandardItemModel(4,1,this);
     midiGridModel->setHorizontalHeaderItem(0, new QStandardItem(QString("Byte 0")));
     midiGridModel->setHorizontalHeaderItem(1, new QStandardItem(QString("Byte 1")));
-    midiGridModel->setHorizontalHeaderLabels(2, new QStandardItem(QString("Byte 2")));
-    midiGridModel->setHorizontalHeaderLabels(3, new QStandardItem(QString("Timestamp")));
+    midiGridModel->setHorizontalHeaderItem(2, new QStandardItem(QString("Byte 2")));
+    midiGridModel->setHorizontalHeaderItem(3, new QStandardItem(QString("Timestamp")));
 
     eventTable = new QTableView();
     eventTable->setGridStyle(Qt::PenStyle::SolidLine);

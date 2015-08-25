@@ -6,8 +6,11 @@
 
 QT       += core gui
 QMAKE_CXXFLAGS += -std=c++11
-QMAKE_CXXFLAGS += -D__MACOSX_CORE__
 
+linux: QMAKE_CXXFLAGS += -D__LINUX_ALSA__
+linux: LIBS += -lasound -lpthread
+
+mac: QMAKE_CXXFLAGS += -D__MACOSX_CORE__
 mac: LIBS += -framework CoreMIDI
 mac: LIBS += -framework CoreAudio
 mac: LIBS += -framework CoreFoundation
