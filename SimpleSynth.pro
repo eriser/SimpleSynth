@@ -26,11 +26,17 @@ SOURCES += main.cpp\
     RtAudio.cpp \
     MidiWindow.cpp \
     AudioSetupWindow.cpp \
-    AppManager.cpp
+    AppManager.cpp \
+    gm-lib/Command.cpp \
+    gm-lib/MidiCommand.cpp \
+    gm-lib/Synth.cpp
 
 HEADERS  += RtMidi.h \
     RtAudio.h \
     MidiWindow.h \
     AudioSetupWindow.h \
     RtAudio.h \
-    AppManager.h
+    AppManager.h \
+    gm-lib/Command.h \
+    gm-lib/MidiCommand.h \
+    gm-lib/Synth.h
